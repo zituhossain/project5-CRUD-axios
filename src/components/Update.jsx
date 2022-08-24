@@ -1,35 +1,35 @@
-import React from "react";
-import { useState } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Create = () => {
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
-  const history = useNavigate();
+const Update = () => {
+  const [id, setId] = useState(0);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setId(localStorage.getItem("id"));
+    setName(localStorage.getItem("name"));
+    setEmail(localStorage.getItem("email"));
+  }, []);
+
+  const handleUpdate = (e) => {
     e.preventDefault();
-    console.log("clicked");
     axios
-      .post("https://6304eb33697408f7edbe2be4.mockapi.io/users", {
-        name: name,
-        email: email,
+      .put(`https://6304eb33697408f7edbe2be4.mockapi.io/users/${id}`, {
+        name,
+        email,
       })
       .then(() => {
-        history("/read");
+        navigate("/read");
       });
   };
+
   return (
     <>
-      <div className="d-flex justify-content-between m-2">
-        <h2>Create</h2>
-        <Link to="/read">
-          <button type="button" className="btn btn-success">
-            Show Data
-          </button>
-        </Link>
-      </div>
+      <h2>Update</h2>
       <form>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
@@ -40,6 +40,7 @@ const Create = () => {
             className="form-control"
             id="name"
             name="name"
+            value={name}
             onChange={(e) => setName(e.target.value)}
             required
           />
@@ -53,20 +54,26 @@ const Create = () => {
             className="form-control"
             id="email"
             name="email"
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
         <button
           type="submit"
-          className="btn btn-primary"
-          onClick={handleSubmit}
+          className="btn btn-primary mx-2"
+          onClick={handleUpdate}
         >
-          Submit
+          Update
         </button>
+        <Link to="/read">
+          <button className="btn btn-secondary mx-2">
+            Back
+          </button>
+        </Link>
       </form>
     </>
   );
 };
 
-export default Create;
+export default Update;
