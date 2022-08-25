@@ -87,13 +87,13 @@ const Read = () => {
         </thead>
 
         {data
-          // .filter((el) => {
-          //   if (el === "") {
-          //     return el;
-          //   } else {
-          //     return el.name.toLowerCase().includes(inputText);
-          //   }
-          // })
+          .filter((el) => {
+            if (el === "") {
+              return el;
+            } else {
+              return el.name.toLowerCase().includes(inputText);
+            }
+          })
           .map((eachData) => {
             const { id, name, email } = eachData;
             return (
