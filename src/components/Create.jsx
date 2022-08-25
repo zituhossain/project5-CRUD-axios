@@ -4,13 +4,12 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
 const Create = () => {
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const history = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("clicked");
     axios
       .post("https://6304eb33697408f7edbe2be4.mockapi.io/users", {
         name: name,

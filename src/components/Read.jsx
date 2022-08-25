@@ -6,7 +6,8 @@ import { Link } from "react-router-dom";
 const Read = () => {
   const [data, setData] = useState([]);
   const [err, setErr] = useState([]);
-  const [tableDark, setTableDark] = useState('')
+  const [tableDark, setTableDark] = useState("");
+  const [inputText, setInputText] = useState("");
 
   const getAllData = () => {
     axios
@@ -37,24 +38,37 @@ const Read = () => {
     localStorage.setItem("email", email);
   };
 
+  const inputHandler = (e) => {
+    setInputText(e.target.value.toLowerCase());
+  };
+
   return (
     <>
-      <div class="form-check form-switch">
+      <h2>Read</h2>
+      <div className="form-check form-switch">
         <input
           className="form-check-input"
           type="checkbox"
           id="flexSwitchCheckDefault"
-          style={{display:'flex'}}
-          onClick={()=>{
-            if (tableDark === 'table-dark') {
-              setTableDark('')
-            }else setTableDark('table-dark')
+          style={{ display: "flex" }}
+          onClick={() => {
+            if (tableDark === "table-dark") {
+              setTableDark("");
+            } else setTableDark("table-dark");
           }}
         />
-        <span className="ms-2 fw-bold">Dark Mode</span> 
+      </div>
+      <div className="mb-3">
+        <input
+          type="search"
+          name="search"
+          placeholder="type name or email"
+          className="form-control"
+          value={inputText}
+          onChange={inputHandler}
+        />
       </div>
       <div className="d-flex justify-content-between m-2">
-        <h2>Read</h2>
         <Link to="/">
           <button type="button" className="btn btn-secondary">
             Add New
@@ -72,39 +86,47 @@ const Read = () => {
           </tr>
         </thead>
 
-        {data.map((eachData) => {
-          const { id, name, email } = eachData;
-          return (
-            <>
-              <tbody>
-                <tr key={id}>
-                  <th scope="row">{id}</th>
-                  <td>{name}</td>
-                  <td>{email}</td>
-                  <td>
-                    <Link to="/update">
+        {data
+          // .filter((el) => {
+          //   if (el === "") {
+          //     return el;
+          //   } else {
+          //     return el.name.toLowerCase().includes(inputText);
+          //   }
+          // })
+          .map((eachData) => {
+            const { id, name, email } = eachData;
+            return (
+              <>
+                <tbody>
+                  <tr key={id}>
+                    <th scope="row">{id}</th>
+                    <td>{name}</td>
+                    <td>{email}</td>
+                    <td>
+                      <Link to="/update">
+                        <button
+                          type="button"
+                          className="btn btn-warning mx-2"
+                          onClick={() => setToLocalStorage(id, name, email)}
+                        >
+                          Update
+                        </button>
+                      </Link>
+
                       <button
                         type="button"
-                        className="btn btn-warning mx-2"
-                        onClick={() => setToLocalStorage(id, name, email)}
+                        className="btn btn-danger"
+                        onClick={() => handleDelete(id)}
                       >
-                        Update
+                        Delete
                       </button>
-                    </Link>
-
-                    <button
-                      type="button"
-                      className="btn btn-danger"
-                      onClick={() => handleDelete(id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </>
-          );
-        })}
+                    </td>
+                  </tr>
+                </tbody>
+              </>
+            );
+          })}
       </table>
     </>
   );
